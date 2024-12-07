@@ -39,6 +39,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: ls
+        run: ls -la
+
       - name: Build and Publish Image
         run: |
           COMMIT_HASH=$(echo ${{ github.sha }} | cut -c1-7)
