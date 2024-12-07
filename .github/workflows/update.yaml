@@ -20,9 +20,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Get Commit Hash
+        run: echo ${{ github.sha }} | head -c 7 > commit_hash.txt
+
       - name: Update Kubernetes Manifest
         run: |
-          COMMIT_HASH=$(echo ${{ github.sha }} | head -c 7)
+          COMMIT_HASH=$(cat commit_hash.txt)
           sed -i "s|image: ${{ inputs.image_name }}:.*|image: ${{ inputs.image_name }}:${{ COMMIT_HASH }}|" ${{ inputs.yaml_file }}
 
       - name: Commit and Push Changes
