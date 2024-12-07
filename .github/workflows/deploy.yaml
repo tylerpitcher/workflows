@@ -1,0 +1,26 @@
+name: Deploy
+description: Update Kubernetes manifest with new image version and deploy.
+inputs:
+  yaml_file:
+    description: Path to the Kubernetes YAML file
+    required: true
+  image_name:
+    description: Full Docker image name
+    required: true
+  image_version:
+    description: Docker image version
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Update manifest
+      shell: bash
+      run: |
+        sed -i "s|image: ${{ inputs.image_name }}:.*|image: ${{ inputs.image_name }}:${{ inputs.image_version }}|" ${{ inputs.yaml_file }}
+
+    - name: Apply to Kubernetes
+      shell: bash
+      run: |
+        kubectl apply -f ${{ inputs.yaml_file }}
+      env:
+        KUBECONFIG: ${{ secrets.KUBECONFIG }}
