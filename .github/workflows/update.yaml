@@ -22,7 +22,8 @@ jobs:
 
       - name: Update Kubernetes Manifest
         run: |
-          sed -i "s|image: ${{ inputs.image_name }}:.*|image: ${{ inputs.image_name }}:${{ github.sha | head -c 7 }}|" ${{ inputs.yaml_file }}
+          COMMIT_HASH=$(echo ${{ github.sha }} | head -c 7)
+          sed -i "s|image: ${{ inputs.image_name }}:.*|image: ${{ inputs.image_name }}:${{ COMMIT_HASH }}|" ${{ inputs.yaml_file }}
 
       - name: Commit and Push Changes
         run: |
